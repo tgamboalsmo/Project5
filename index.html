@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<!--- Author: Tim Gamboa 							--->
+<!--- Purpose: Udacity - Neighborhood Map Project 	--->
+<!--- Related Files: app.js, maps.css, README.md 	--->
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/maps.css">
+  	</head>
+  	<body>
+		<div id="map-canvas"></div>
+		
+		<div id="meetup-container">
+			<div id="meetup-searchfield">
+				<!-- Input box for search criteria --->
+				<input id="searchbox" type="text" placeholder="Search MeetUps..." data-bind="value: searchInput">
+				<div id="buttons">
+					<!-- Search and Reset buttons, both are tied to functions in appViewModel -->
+					<button id="searchbutton" data-bind="click: $root.searchFilter">Search</button>
+					<button id="resetbutton" data-bind="click: $root.resetFilter">Reset</button>
+				</div>
+			</div>
+			<div id="meetuplist">
+				<!-- KO if will show span with msg for user if no search results are returned -->
+				<!-- ko if: numberOfSearchResults() < 1 -->
+					<span>No MeetUps match your criteria.</span>
+				<!-- /ko -->
+				<!-- UL for MeetUp list tied to displayMeetUps observable array -->
+				<ul data-bind="foreach: displayMeetUps">
+					<li class="meetuplistitem" data-bind="click: $root.highliteMarker">
+							<span class="meetup-name" data-bind="text: Name"></span><br>
+							<span class="meetup-cat">Category: <!-- ko text: Category --><!-- /ko --></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+		<script src="libs/jquery.min.js"></script>
+		<script src="libs/knockout-3.3.0.js"></script>
+    	<script src="js/app.js"></script>
+  	</body>
+</html>
+
+					

@@ -1,0 +1,83 @@
+html, body, #map-canvas { 
+	height: 100%; 
+	margin: 0; 
+	padding: 0;
+	overflow: hidden;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+li {
+	border-bottom: 1px solid black;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+li:hover {
+	background-color: rgb(224,224,209);
+}
+
+#meetuplist { 
+	height: calc(100% - 35px);
+	overflow: auto;
+}
+
+#meetup-container {
+	position: absolute; 
+	top: 25px; 
+	right: 10px; 
+	bottom: 25px;
+	background-color: rgba(255,255,255,.8);
+    border: 1px solid black;
+    max-width: 275px;
+    min-width275px;
+	z-index: 99; 
+	overflow: hidden;
+}
+
+#meetup-searchfield {
+	min-height: 35px;
+	width: 100%;
+}
+
+#searchbox {
+	width: 100%;
+}
+#buttons {
+	width: 100%;
+	display: inline-flex;
+}
+#searchbutton {
+	width: 50%;
+	display: inline-block;
+	cursor: pointer;
+}
+
+#resetbutton {
+	width: 50%;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.meetup-name {
+	font-weight: bold;
+}
+
+.meetup-cat {
+	color: rgb(48,48,48);
+}
+
+/****** 480 break point adjustments ******/
+@media screen and (max-width: 480px) {
+	#meetuplist {
+		display: none;
+	}
+	
+	#meetup-container { 
+		bottom: auto;
+	}
+}
