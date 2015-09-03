@@ -47,10 +47,12 @@ li:hover {
 #searchbox {
 	width: 100%;
 }
+
 #buttons {
 	width: 100%;
 	display: inline-flex;
 }
+
 #searchbutton {
 	width: 50%;
 	display: inline-block;

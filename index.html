@@ -3,6 +3,7 @@
 <!--- Author: Tim Gamboa 							--->
 <!--- Purpose: Udacity - Neighborhood Map Project 	--->
 <!--- Related Files: app.js, maps.css, README.md 	--->
+<!--- Libraries: Knockoutjs, jQuery					--->
 
 <html lang="en">
 	<head>
@@ -12,12 +13,14 @@
 		<link rel="stylesheet" href="css/maps.css">
   	</head>
   	<body>
+  		<!--- Canvas for the map --->
 		<div id="map-canvas"></div>
 		
 		<div id="meetup-container">
 			<div id="meetup-searchfield">
 				<!-- Input box for search criteria --->
 				<input id="searchbox" type="text" placeholder="Search MeetUps..." data-bind="value: searchInput">
+				<!-- Div container for the buttons -->
 				<div id="buttons">
 					<!-- Search and Reset buttons, both are tied to functions in appViewModel -->
 					<button id="searchbutton" data-bind="click: $root.searchFilter">Search</button>
@@ -25,12 +28,14 @@
 				</div>
 			</div>
 			<div id="meetuplist">
-				<!-- KO if will show span with msg for user if no search results are returned -->
+				<!-- Knockoutjs if will show span with msg for user if no search results are returned -->
+				<!-- numberOfSearchResults is an observable with default set to 1 -->
 				<!-- ko if: numberOfSearchResults() < 1 -->
 					<span>No MeetUps match your criteria.</span>
 				<!-- /ko -->
 				<!-- UL for MeetUp list tied to displayMeetUps observable array -->
 				<ul data-bind="foreach: displayMeetUps">
+					<!-- function tied to this click bind causes map marker to bounce -->
 					<li class="meetuplistitem" data-bind="click: $root.highliteMarker">
 							<span class="meetup-name" data-bind="text: Name"></span><br>
 							<span class="meetup-cat">Category: <!-- ko text: Category --><!-- /ko --></span>
@@ -39,10 +44,12 @@
 			</div>
 		</div>
 		
+		<!--- js libraries and files --->
 		<script src="libs/jquery.min.js"></script>
 		<script src="libs/knockout-3.3.0.js"></script>
     	<script src="js/app.js"></script>
   	</body>
 </html>
 
+<!--- MeetUp data courtesy of http://www.meetup.com/ through their API --->
 					

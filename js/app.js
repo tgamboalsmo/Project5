@@ -35,16 +35,17 @@ function appViewModel() {
 	var self = this;
 	
 	//Key variables
-	this.kcMeetUpsArray = []; //Stores complete list of meetups
+	this.kcMeetUpsArray = []; //Stores complete list of meetups after initial download
 	this.displayMeetUps = ko.observableArray([]); //Stores meetups to be displayed in the active list
 	this.markersArray = [];  //Stores the map markers of the meetups in the active list
 	this.searchInput = ko.observable(); //Search input box
 	this.numberOfSearchResults = ko.observable(1); //Stores # of search results used to display msg to user if 0
 	
-	//Performs API call to get runner meet up information, checks if next event is
+	//Performs API call to get meet up information, checks if category is
 	//empty before pushing to the array as some events do not have this property.
 	//This function only gathers the MeetUps and stores them   
 	function getLocalMeetUps() {
+		//Settimeout used to to display msg to user if API call fails
 		var meetupRequestTimeOut = setTimeout(function() {
 			alert('Failed to load MeetUp resources. Please refresh and try again.');
 		}, 5000);
@@ -69,13 +70,12 @@ function appViewModel() {
 					}
 				}
 				loadAllMeetUps();
-				clearTimeout(meetupRequestTimeOut);
+				clearTimeout(meetupRequestTimeOut); //Clear timeout if API call is successful
     		}
 		});
 	}   
 	
-	//Load all of the meetups and associated map markers to the page for first page load
-	//"non filtered" results
+	//Load all available meetups and associated map markers to the page
 	function loadAllMeetUps() {
 		var len = self.kcMeetUpsArray.length;
 		for(var i=0;i<len; i++) { 
@@ -92,21 +92,20 @@ function appViewModel() {
 //======================================================================================//
 // Filtering Controls   																//
 //======================================================================================//
-	//Function is called when users clicks search to filter results
+	//Function is called when users clicks the search button to filter results
 	this.searchFilter = function() {
 		var input = self.searchInput();
 		var listArray = self.kcMeetUpsArray;
 		var listLen = self.kcMeetUpsArray.length;
-		self.numberOfSearchResults(1); //Reset variable to clear 'no results' message
+		self.numberOfSearchResults(1); //Reset variable to clear 'no results' message, if displayed
 		
-		//Ensures input text is not null, blank or whitespace
+		//Ensures search input text is not null, blank or whitespace
 		if(input != null && input != '' && input.trim() != '') {
 			input = input.trim().toLowerCase();
 			//Clear display array and active map markers
 			self.displayMeetUps.removeAll();
 			removeAllMarkers();
-			//For loop gathers data based on search input to regenerate active list
-			//and active map markers
+			//Loops thru all MeetUps in kcMeetUpsArray
 			for(var i=0;i<listLen;i++){
 				var nameLowerCase = listArray[i].Name.toLowerCase();
 				//Looks for meetups that start with the search input, those results are
@@ -121,13 +120,14 @@ function appViewModel() {
 					addMarker(location, name, description, who, link);
 				}
 			}
+			//Sets observable to length of the display array, if 0 then 'no results' msg displayed
 			self.numberOfSearchResults(self.displayMeetUps().length);
 		} else {
 			alert("Please enter valid search input.");
 		}
 	}
 	
-	//Clear all search filter, reset lists and map markers to display all meetups
+	//Clear search filter, reset lists and map markers to display all meetups
 	this.resetFilter = function() {
 		//Clear list, reset input box and clear markers
 		removeAllMarkers();
@@ -142,8 +142,9 @@ function appViewModel() {
 // Map Marker Controls    																//
 //======================================================================================//
 	//Adds single marker to the map and pushes it onto the markersArray
+	//Parameters: name, desc, who, link are for the InfoWindow
 	function addMarker(location, name, description, who, link) {
-		//Contains MeetUp info for the map marker info window
+		//Contains the markup for the map marker info window
 		var contentString = '<div id="content">'+
       	'<h1 class="name">' + name + '</h1>'+
       	'<hr>' +
@@ -159,13 +160,14 @@ function appViewModel() {
     		maxWidth: 400,
     		maxHeight: 400
   		});
+  		//Adds marker to the map with animation
 		var marker = new google.maps.Marker({
 			animation: google.maps.Animation.DROP,
       		position: location,
       		map: map,
       		title: name,
   		});
-  		//Listener to display info window when clicked
+  		//Listener to display info window when clicked with quick animation drop when clicked
   		marker.addListener('click', function() {
   			marker.setAnimation(google.maps.Animation.DROP);
     		infowindow.open(map, marker);
@@ -182,23 +184,23 @@ function appViewModel() {
   		self.markersArray = [];
 	}
 	
-	//Linked to MeetUp object in the list, click animates marker
-	//selected is the associated MeetUp object that is passed to the function
+	//This function is is linked to MeetUp element in the list, click animates associated marker
 	this.highliteMarker = function(selected) {
-		//Get array position in displayMeetUps as the associated map marker is in the 
-		//same position in the marker array
+		//Get array position of MeetUp in displayMeetUps array as the associated map marker 
+		//is in the same position in the marker array
 		var position = self.displayMeetUps().indexOf(selected);
 		var markersLen = self.markersArray.length;
+		//Ensures no markers are animated before animating clicked MeetUp
 		for(var i=0;i<markersLen;i++) {
 			self.markersArray[i].setAnimation(null);
 		}
 		self.markersArray[position].setAnimation(google.maps.Animation.BOUNCE);
 	}
-	//Kicks off actions to generate MeetUp data, list and map markers
+	//Kicks off actions to generate MeetUp data via ajax call, list and map markers
 	getLocalMeetUps();
 }
 
-//Kicks off map and data initialization
+//Triggers GoogleMaps API load, map load and appViewModel
 window.onload = loadScript;
 	
 
