@@ -1,4 +1,11 @@
-html, body, #map-canvas { 
+html { 
+	height: 100%; 
+	margin: 0; 
+	padding: 0;
+	overflow: hidden;
+}
+
+body { 
 	height: 100%; 
 	margin: 0; 
 	padding: 0;
@@ -7,8 +14,8 @@ html, body, #map-canvas {
 
 ul {
     list-style-type: none;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 li {
@@ -19,6 +26,13 @@ li {
 
 li:hover {
 	background-color: rgb(224,224,209);
+}
+
+#map-canvas { 
+	height: 100%; 
+	margin: 0; 
+	padding: 0;
+	overflow: hidden;
 }
 
 #meetuplist { 
@@ -65,21 +79,15 @@ li:hover {
 	cursor: pointer;
 }
 
+#meetuplist-toggle-button {
+	width: 100%;
+	cursor: pointer;
+}
+
 .meetup-name {
 	font-weight: bold;
 }
 
 .meetup-cat {
 	color: rgb(48,48,48);
-}
-
-/****** 480 break point adjustments ******/
-@media screen and (max-width: 480px) {
-	#meetuplist {
-		display: none;
-	}
-	
-	#meetup-container { 
-		bottom: auto;
-	}
 }

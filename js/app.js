@@ -23,7 +23,6 @@ function initializePage() {
 //callback to initialize the page  
 function loadScript() {
 	var script = document.createElement('script');
-	script.type = 'text/javascript';
 	script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAkjSGsHMm6wKUCnIE6_nIqqzMUZtkciEE&callback=initializePage';
 	document.body.appendChild(script);
 }
@@ -35,11 +34,13 @@ function appViewModel() {
 	var self = this;
 	
 	//Key variables
-	this.kcMeetUpsArray = []; //Stores complete list of meetups after initial download
-	this.displayMeetUps = ko.observableArray([]); //Stores meetups to be displayed in the active list
-	this.markersArray = [];  //Stores the map markers of the meetups in the active list
-	this.searchInput = ko.observable(); //Search input box
-	this.numberOfSearchResults = ko.observable(1); //Stores # of search results used to display msg to user if 0
+	self.kcMeetUpsArray = []; //Stores complete list of meetups after initial download
+	self.displayMeetUps = ko.observableArray(); //Stores meetups to be displayed in the active list
+	self.markersArray = [];  //Stores the map markers of the meetups in the active list
+	self.markersInfoWindow = [];  //Stores map markers infowindow objects
+	self.searchInput = ko.observable(); //Search input box
+	self.numberOfSearchResults = ko.observable(1); //Stores # of search results used to display msg to user if 0
+	self.listToggleIndicator = ko.observable(1);  //Used as part of the hide/show button for the Meet Up list
 	
 	//Performs API call to get meet up information, checks if category is
 	//empty before pushing to the array as some events do not have this property.
@@ -125,7 +126,7 @@ function appViewModel() {
 		} else {
 			alert("Please enter valid search input.");
 		}
-	}
+	};
 	
 	//Clear search filter, reset lists and map markers to display all meetups
 	this.resetFilter = function() {
@@ -137,7 +138,7 @@ function appViewModel() {
 		
 		//Re-populate all meetups to the list and and markers to the page from kcmeetupsarray
 		loadAllMeetUps();
-	}
+	};
 //======================================================================================//
 // Map Marker Controls    																//
 //======================================================================================//
@@ -169,10 +170,20 @@ function appViewModel() {
   		});
   		//Listener to display info window when clicked with quick animation drop when clicked
   		marker.addListener('click', function() {
+  			closeAllInfowindows();
   			marker.setAnimation(google.maps.Animation.DROP);
     		infowindow.open(map, marker);
   		});
   		self.markersArray.push(marker);
+  		self.markersInfoWindow.push(infowindow);
+	}
+	
+	//Closes all of the infowindow objects of the map markers
+	function closeAllInfowindows() {
+		var len = self.markersInfoWindow.length;
+		for(var i=0;i<len;i++) {
+			self.markersInfoWindow[i].close();
+		}
 	}
 	
 	//Remove all markers from map and clears markersArray
@@ -196,12 +207,41 @@ function appViewModel() {
 		}
 		self.markersArray[position].setAnimation(google.maps.Animation.BOUNCE);
 	}
+	
+//======================================================================================//
+// Meet Up List Controls (hide/show the list)											//
+//======================================================================================//
+	//This function is tied to the "Toggle List View" button and is used to show/hide
+	//the MeetUp List view. An observable variable is used to control the hide/show actions
+	this.toggleMeetUpList = function() {
+		if (self.listToggleIndicator() == 1) {
+			self.listToggleIndicator(0);
+		} else {
+			self.listToggleIndicator(1);
+		}
+	};
+	
+	//Resize event handler is used to detect when the screen sized smaller
+	$(window).resize(function() {
+		checkWindowSize();
+	});
+	
+	//Checks the window width and changes value of observable variable to hide/show MeetUp list
+	function checkWindowSize() {
+		var windowWidth = $(window).width();
+		if (windowWidth < 480) {
+			self.listToggleIndicator(0);
+		} else {
+			self.listToggleIndicator(1);
+		}
+	}
+	
 	//Kicks off actions to generate MeetUp data via ajax call, list and map markers
 	getLocalMeetUps();
+	//Checks window size at page load
+	checkWindowSize();
 }
+
 
 //Triggers GoogleMaps API load, map load and appViewModel
 window.onload = loadScript;
-	
-
-						

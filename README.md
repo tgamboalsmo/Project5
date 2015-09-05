@@ -33,10 +33,10 @@ manipulation. The code in this file is essentially divided up into 4 sections:
 search button and reset button)
 4 - Map Marker (contains code to add markers to the page, remove markers and animates
 markers when list elements are clicked)
+5 - MeetUp List Controls (contains code to handle hiding and showing the MeetUp list for smaller
+screens).
 
-*maps.css* - Basic CSS for page styling and formatting. Does contain a break point for 
-max-width of 480px for smaller devices (removes the MeetUp list leaving only the search
-input field and the 2 buttons).
+*maps.css* - Basic CSS for page styling and formatting.
 
 *libs* - Contains 2 libraries used for development: Knockoutjs and jQuery
 
@@ -51,7 +51,10 @@ display all groups. When filtered, only those meeting the user search criteria w
 The MeetUp elements will highlight when user hovers over each one. When user clicks on an
 element, this will cause the associated map marker to bounce. If user clicks on the list
 element again, the marker will stop bouncing. If the user clicks on another list element,
-the previous one will stop bouncing and the new map marker will start bouncing.
+the previous one will stop bouncing and the new map marker will start bouncing. On smaller 
+screens or devices, the MeetUp list will disappear at screen smaller than 480px wide to 
+allow the user to view more of the map. However, a toggle button exists that will allow 
+the user to hide or show the MeetUp list as they please even on smaller devices.
 
 *Filtering* - The user must enter at least 1 non-blank space character to filter the results.
 An error will be displayed to the user otherwise. Once user enters valid search criteria and
@@ -65,7 +68,8 @@ will clear the map markers and MeetUp list, then reload all of the MeetUps to th
 *Map Markers* - Map markers will only be present if the associated MeetUp group is listed on
 the MeetUp list. Clicking on the map marker will cause the marker to animate with a 'drop'
 followed with the info window popping up. The info window contains the MeetUp group name,
-type, link and information passed in the description from the API call.
+type, link and information passed in the description from the API call. Only 1 info window
+will appear at any given time. The previous one will disappear when a new one is opened.
 
 *Notable Mentions*
 1 - Some of the MeetUp groups have the exact same location. As a result, it could appear
@@ -73,9 +77,28 @@ that there are fewer map markers than what is in the list. When in fact some of 
 markers are just on top of each other. This can be confirmed by clicking on the list elements
 and seeing some of the map markers bounce from the same location.
 
-2 - To accomodate smaller devices, CSS has been added to remove the MeetUp list when the
-screen width is smaller than 480px. All of the search functionality will still be
-present, however, the results will only be displayed via the map markers.
+2 - To accomodate smaller devices, a KO observable variable, KO bindings, a resize event
+handler and a few functions were created to hide the MeetUp list when the screen is small 
+or sized smaller.
+
+How To
+------
+To launch the application: Double click on the index.html in the Project5 directory. This 
+will launch the application in your default browser.
+
+To see location of a MeetUp group: Click on the desired MeetUp group in the list which will
+cause the associated map marker to bounce.
+
+To get more information about the MeetUp group: Click on a map marker which pop up the info
+window with more information.
+
+To search MeetUp groups: Type a search term in the input box and click "Search".
+
+To reset MeetUp groups: Click on the "Reset" button which will restore all of the MeetUp
+groups to the list and the map.
+
+To hide or show the MeetUp list: Click on the "Toggle List View" button to hide or show
+the MeetUp list.
 
 Acknowledgments
 ---------------

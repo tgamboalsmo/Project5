@@ -7,16 +7,18 @@
 
 <html lang="en">
 	<head>
+		<title>Neighborhood Map Project </title>
 		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<link rel="stylesheet" href="css/maps.css">
   	</head>
   	<body>
   		<!--- Canvas for the map --->
 		<div id="map-canvas"></div>
 		
-		<div id="meetup-container">
+		<!--- Style bind was added to ensure the outer div collapses with the meetuplist div hides --->
+		<div id="meetup-container" data-bind="style: {bottom: listToggleIndicator() > 0 ? '25px' : 'auto'}">
 			<div id="meetup-searchfield">
 				<!-- Input box for search criteria --->
 				<input id="searchbox" type="text" placeholder="Search MeetUps..." data-bind="value: searchInput">
@@ -27,6 +29,11 @@
 					<button id="resetbutton" data-bind="click: $root.resetFilter">Reset</button>
 				</div>
 			</div>
+			<div id="meetuplist-toggle">
+				<button id="meetuplist-toggle-button" data-bind="click: $root.toggleMeetUpList">Toggle List View</button>
+			</div>
+			<!--- Knockout IF statement hides the div based on the observable variable value --->
+			<!-- ko if: listToggleIndicator() > 0 -->
 			<div id="meetuplist">
 				<!-- Knockoutjs if will show span with msg for user if no search results are returned -->
 				<!-- numberOfSearchResults is an observable with default set to 1 -->
@@ -42,6 +49,7 @@
 					</li>
 				</ul>
 			</div>
+			<!-- /ko -->
 		</div>
 		
 		<!--- js libraries and files --->
